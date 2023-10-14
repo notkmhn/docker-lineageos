@@ -1,5 +1,4 @@
-FROM eclipse-temurin:8-jammy
-LABEL maintainer="jfloff@inesc-id.pt"
+FROM eclipse-temurin:17-jdk
 
 ###################
 # This Dockerfile was based on the following Dockerfiles
@@ -18,13 +17,9 @@ ENV \
 # install packages
 RUN set -ex ;\
     apt-get update && apt-get install -y --no-install-recommends \
-          # install sdk
-          # https://wiki.lineageos.org/devices/klte/build#install-the-build-packages
           android-sdk-platform-tools-common \
           android-tools-adb \
           android-tools-fastboot \
-          # install packages
-          # https://wiki.lineageos.org/devices/klte/build#install-the-build-packages
           bc \
           bison \
           build-essential \
@@ -56,23 +51,14 @@ RUN set -ex ;\
           xsltproc \
           zip \
           zlib1g-dev \
-          # extra packages
-          # for repo
           python3 \
-          # for repo
+          python-is-python3 \
           openssh-client \
-          # for ps command
           procps \
-          # no less on debian *gasp!*
           less \
-          # so we have an editor inside the container
           vim \
-          # has 'col' package needed for 'breakfast'
           bsdmainutils \
-          # unzip is needed at least for Fairphone 4 build
           unzip \
-          # we can't build kernel on root (like docker runs)
-          # we add these so we have a non-root user
           fakeroot \
           sudo \
           ;\
@@ -90,7 +76,6 @@ RUN set -ex ;\
     # create paths: https://wiki.lineageos.org/devices/klte/build#create-the-directories
     curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/bin/repo ;\
     chmod a+x /usr/bin/repo ;\
-    ln -s /usr/bin/python3 /usr/bin/python && \
     # config git coloring
     # check this link for things repo check:
     # https://gerrit.googlesource.com/git-repo/+/master/subcmds/init.py#328
